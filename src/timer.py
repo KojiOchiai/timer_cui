@@ -166,7 +166,7 @@ def run_timer(duration: int, label: str, tick: float) -> None:
                 if key:
                     key = key.lower()
                     if key in {"q"}:
-                        break
+                        return
                     if key in {"p", " "}:
                         if paused:
                             start = now
