@@ -72,6 +72,8 @@ def format_time(total_seconds: float) -> str:
 def render_big_time(time_str: str) -> Text:
     lines = [""] * len(BIG_GLYPHS["0"])
     gap = "░"
+    for idx in range(len(lines)):
+        lines[idx] = gap
     for ch in time_str:
         glyph = BIG_GLYPHS.get(ch, BIG_GLYPHS[" "])
         for idx, row in enumerate(glyph):
