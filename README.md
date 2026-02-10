@@ -16,7 +16,7 @@ Rich-based CLI countdown timer with large ASCII-art time display.
 This project uses a `src/` layout. Install in editable mode:
 
 ```bash
-uv run pip install -e .
+uv sync
 ```
 
 ## Usage
