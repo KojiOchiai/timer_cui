@@ -1,0 +1,25 @@
+[project]
+name = "timer-app"
+version = "0.1.0"
+description = "CLI timer with rich display"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "rich>=13.0",
+]
+
+[project.scripts]
+timer = "timer:main"
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["timer", "glyphs"]
+
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.19.1",
+]
