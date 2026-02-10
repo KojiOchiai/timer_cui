@@ -6,10 +6,11 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
   "rich>=13.0",
+  "typer>=0.9",
 ]
 
 [project.scripts]
-timer = "timer:main"
+timer = "timer:app"
 
 [build-system]
 requires = ["setuptools>=69", "wheel"]

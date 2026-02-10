@@ -6,7 +6,9 @@
       "Bash(jj describe:*)",
       "Bash(jj log:*)",
       "Bash(uvx ty:*)",
-      "Bash(jj new:*)"
+      "Bash(jj new:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run:*)"
     ]
   }
 }

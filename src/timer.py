@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import argparse
 import re
 import sys
 import time
-from typing import Any, Iterable
+from typing import Annotated, Any
+
+import typer
 
 from rich.console import Console, Group
 from rich.live import Live
@@ -129,17 +130,7 @@ def validate_duration(seconds: int) -> None:
         raise ValueError("Duration must be greater than 0")
 
 
-def parse_args(argv: Iterable[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Rich CLI timer",
-        epilog="Examples: timer 90, timer 2m30s, timer 00:10",
-    )
-    parser.add_argument("duration", help="Duration (seconds, 2m30s, or mm:ss)")
-    parser.add_argument("-l", "--label", default="Countdown", help="Label text")
-    parser.add_argument(
-        "--tick", type=float, default=0.1, help="Refresh interval seconds"
-    )
-    return parser.parse_args(list(argv))
+app = typer.Typer(help="Rich CLI timer")
 
 
 def run_timer(duration: int, label: str, tick: float) -> None:
@@ -195,20 +186,23 @@ def run_timer(duration: int, label: str, tick: float) -> None:
     console.print(Panel(Text("Time's up!", style="bold green"), border_style="green"))
 
 
-def main(argv: Iterable[str] | None = None) -> int:
-    args = parse_args(argv or sys.argv[1:])
+@app.command(epilog="Examples: timer 90, timer 2m30s, timer 00:10")
+def main(
+    duration: Annotated[str, typer.Argument(help="Duration (seconds, 2m30s, or mm:ss)")],
+    label: Annotated[str, typer.Option("--label", "-l", help="Label text")] = "Countdown",
+    tick: Annotated[float, typer.Option(help="Refresh interval seconds")] = 0.1,
+) -> None:
     try:
-        seconds = parse_duration(args.duration)
+        seconds = parse_duration(duration)
         validate_duration(seconds)
     except ValueError as exc:
-        raise SystemExit(f"Error: {exc}")
+        raise typer.BadParameter(str(exc))
 
-    if args.tick <= 0:
-        raise SystemExit("Error: --tick must be greater than 0")
+    if tick <= 0:
+        raise typer.BadParameter("--tick must be greater than 0")
 
-    run_timer(seconds, args.label, args.tick)
-    return 0
+    run_timer(seconds, label, tick)
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    app()
