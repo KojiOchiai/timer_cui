@@ -4,7 +4,8 @@
       "Bash(jj status:*)",
       "Bash(jj diff:*)",
       "Bash(jj describe:*)",
-      "Bash(jj log:*)"
+      "Bash(jj log:*)",
+      "Bash(uvx ty:*)"
     ]
   }
 }

@@ -20,7 +20,7 @@ else:
     import select
     import termios
     import tty
-    msvcrt = None  # type: ignore[assignment]
+    msvcrt = None
 
 
 DURATION_PATTERN = re.compile(
