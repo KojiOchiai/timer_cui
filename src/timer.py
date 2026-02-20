@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import sys
 import time
+from datetime import datetime, timedelta
 from typing import Annotated, Any
 
 import typer
@@ -83,15 +84,30 @@ def render_big_time(time_str: str) -> Text:
     return Text(rendered, style="bold bright_cyan", justify="center")
 
 
-def build_header(label: str, remaining: float, total: float, paused: bool) -> Panel:
+def build_header(
+    label: str,
+    remaining: float,
+    total: float,
+    paused: bool,
+    started_at: datetime,
+    expected_end_at: datetime,
+) -> Panel:
     percent = 0 if total == 0 else min(100.0, (1 - remaining / total) * 100)
     time_text = render_big_time(format_time(remaining))
     status = "Paused" if paused else "Running"
     status_style = "bold yellow" if paused else "bold green"
     sub = Text(f"{label}  |  {percent:5.1f}%  |  {status}", style="bold white")
     sub.stylize(status_style, sub.plain.rfind(status), len(sub.plain))
+    schedule = Text(
+        f"開始時刻: {started_at:%H:%M:%S}  |  終了時刻: {expected_end_at:%H:%M:%S}",
+        style="bold white",
+    )
     hint = Text("Controls: [space]/p pause, s start, q quit", style="dim")
-    return Panel(Group(time_text, sub, hint), title="Timer", border_style="bright_blue")
+    return Panel(
+        Group(time_text, sub, schedule, hint),
+        title="Timer",
+        border_style="bright_blue",
+    )
 
 
 class KeyReader:
@@ -144,6 +160,7 @@ def run_timer(duration: int, label: str, tick: float) -> None:
     )
     task_id = progress.add_task("timer", total=duration)
 
+    started_at = datetime.now()
     start = time.monotonic()
     elapsed_before_pause = 0.0
     paused = False
@@ -175,9 +192,20 @@ def run_timer(duration: int, label: str, tick: float) -> None:
                     elapsed = elapsed_before_pause + (now - start)
 
                 remaining = duration - elapsed
+                expected_end_at = datetime.now() + timedelta(seconds=max(remaining, 0))
                 progress.update(task_id, completed=min(elapsed, duration))
                 live.update(
-                    Group(build_header(label, remaining, duration, paused), progress)
+                    Group(
+                        build_header(
+                            label,
+                            remaining,
+                            duration,
+                            paused,
+                            started_at,
+                            expected_end_at,
+                        ),
+                        progress,
+                    )
                 )
                 if remaining <= 0:
                     break
