@@ -20,7 +20,7 @@ build-backend = "setuptools.build_meta"
 package-dir = {"" = "src"}
 py-modules = ["timer", "glyphs"]
 
-[tool.uv]
-dev-dependencies = [
-    "mypy>=1.19.1",
+[dependency-groups]
+dev = [
+  "mypy>=1.19.1",
 ]
