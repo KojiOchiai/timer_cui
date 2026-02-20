@@ -99,7 +99,7 @@ def build_header(
     sub = Text(f"{label}  |  {percent:5.1f}%  |  {status}", style="bold white")
     sub.stylize(status_style, sub.plain.rfind(status), len(sub.plain))
     schedule = Text(
-        f"開始時刻: {started_at:%H:%M:%S}  |  終了時刻: {expected_end_at:%H:%M:%S}",
+        f"Start: {started_at:%H:%M:%S}  |  End: {expected_end_at:%H:%M:%S}",
         style="bold white",
     )
     hint = Text("Controls: [space]/p pause, s start, q quit", style="dim")
