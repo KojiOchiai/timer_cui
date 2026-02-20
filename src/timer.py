@@ -17,11 +17,13 @@ from glyphs import BIG_GLYPHS
 
 if sys.platform == "win32":
     import msvcrt
+    import winsound
 else:
     import select
     import termios
     import tty
     msvcrt = None
+    winsound = None
 
 
 DURATION_PATTERN = re.compile(
@@ -130,6 +132,13 @@ def validate_duration(seconds: int) -> None:
         raise ValueError("Duration must be greater than 0")
 
 
+def play_chime() -> None:
+    if winsound is not None:
+        winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+        return
+    print("\a", end="", flush=True)
+
+
 app = typer.Typer(help="Rich CLI timer")
 
 
@@ -184,6 +193,7 @@ def run_timer(duration: int, label: str, tick: float) -> None:
                 time.sleep(tick)
 
     console.print(Panel(Text("Time's up!", style="bold green"), border_style="green"))
+    play_chime()
 
 
 @app.command(epilog="Examples: timer 90, timer 2m30s, timer 00:10")

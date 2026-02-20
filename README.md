@@ -7,6 +7,7 @@ Rich-based CLI countdown timer with large ASCII-art time display.
 - Progress bar and percent complete
 - Pause/Resume controls from the keyboard
 - Flexible duration formats (`90`, `2m30s`, `00:10`, `1:02:03`)
+- Chime notification when the countdown completes
 
 ## Requirements
 - Python 3.10+
